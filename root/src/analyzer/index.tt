@@ -1,0 +1,10 @@
+<h1>Insert the file </h1>
+
+<form action="/analyzer/upload" method="post" enctype="multipart/form-data">
+  Name: <input type="text" name="name"></br>
+  Run: <input type="text" name="run"></br>
+  <input type="hidden" name="form_submit" value="yes">
+  <input type="file" name="log">
+  <input type="submit" value="Send">
+</form>
+
