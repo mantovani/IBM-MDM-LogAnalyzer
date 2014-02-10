@@ -1,5 +1,5 @@
 <div id="header">[% PROCESS site/header %]</div>
-
+<div id="links_header">[% PROCESS site/links_header %]</div>
 <div id="content">
 [% content %]
 </div>

@@ -18,11 +18,11 @@ Catalyst Controller.
 
 sub base : Chained('/') : PathPart('analyzer') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
-    $c->stash->{parser}  = $c->model('DB::Analyzer');
-    $c->stash->{db_json} = $c->model('DB::AnalyticsAvg');
+    $c->stash->{db_analyzer}     = $c->model('DB::Analyzer');
+    $c->stash->{db_analyticsavg} = $c->model('DB::AnalyticsAvg');
 }
 
-sub index : Path : Args(0) {
+sub index : Chained('base') : PathPart('') : Args(0) {
     my ( $self, $c ) = @_;
 }
 
@@ -30,7 +30,10 @@ sub upload : Chained('base') : PathPart('upload') : Args(0) {
     my ( $self, $c ) = @_;
     if ( $c->request->parameters->{form_submit} eq 'yes' ) {
         if ( my $upload = $c->request->upload('log') ) {
-            $c->stash->{parser}->parser( $upload, $c->request->parameters );
+            $c->stash->{db_analyzer}
+              ->parser( $upload, $c->request->parameters );
+            $c->stash->{success} = 1;
+            return 1;
         }
     }
 }
@@ -38,14 +41,19 @@ sub upload : Chained('base') : PathPart('upload') : Args(0) {
 sub response : Chained('base') : PathPart('response') : Args(3) {
     my ( $self, $c, $name, $run, $operation ) = @_;
     $c->stash->{data} =
-      $c->stash->{db_json}->json_analyzer( $name, $run, $operation );
+      $c->stash->{db_analyticsavg}->json_analyzer( $name, $run, $operation );
     $c->forward('View::JSON');
 }
 
 sub statics : Chained('base') : PathPart('statics') : Args(2) {
     my ( $self, $c, $name, $operation ) = @_;
+    $c->stash->{test_name} = $name;
     $c->stash->{operation} = $operation;
+}
 
+sub listoperations : Chained('base') : PathPart('listoperations') : Args(1) {
+    my ( $self, $c, $name ) = @_;
+    $c->stash->{test_name} = $name;
 }
 
 =head1 AUTHOR

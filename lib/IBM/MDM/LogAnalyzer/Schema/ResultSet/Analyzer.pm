@@ -43,4 +43,42 @@ sub parser {
     return 1;
 }
 
+sub runs {
+    my ( $self, $name, $operation ) = @_;
+    [
+        map { $_->run } $self->search(
+            { name => $name, operation => $operation },
+            {
+                columns  => [qw/run/],
+                group_by => [qw/run/],
+            }
+        )->all
+    ];
+}
+
+sub list_names {
+    my $self = shift;
+    [
+        map { $_->name } $self->search(
+            {},
+            {
+                columns  => [qw/name/],
+                group_by => [qw/name/],
+            }
+        )->all
+    ];
+}
+
+sub list_operations {
+    my ( $self, $name ) = @_;
+    [
+        map { $_->operation } $self->search(
+            { name => $name },
+            {
+                columns  => [qw/operation/],
+                group_by => [qw/name operation/],
+            }
+        )->all
+    ];
+}
 1;

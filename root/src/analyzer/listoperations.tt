@@ -1,0 +1,14 @@
+<h1>List Operations: [% test_name %]</h1>
+<table>
+	<tr>
+		<td>Operations</td>
+	</tr>
+[% FOREACH operation IN db_analyzer.list_operations(test_name) %]
+	<tr>
+		<td>
+			<a href="[% c.uri_for('/analyzer/statics',test_name,operation) %]">[% operation  %]</a>
+		</td>
+	</tr>
+[% END %]
+	</tr>
+</table>
