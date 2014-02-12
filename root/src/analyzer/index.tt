@@ -9,5 +9,5 @@
 			<a href="[% c.uri_for('/analyzer/listoperations',test_name) %]">[% test_name %]</a>
 		</td>
 	</tr>
-</table>
 [% END %]
+</table>
