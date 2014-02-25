@@ -38,6 +38,13 @@ __PACKAGE__->table("analyzer");
 
 =head1 ACCESSORS
 
+=head2 id
+
+  data_type: 'bigint'
+  is_auto_increment: 1
+  is_nullable: 0
+  sequence: 'analyzer_id_seq'
+
 =head2 name
 
   data_type: 'varchar'
@@ -68,6 +75,13 @@ __PACKAGE__->table("analyzer");
 =cut
 
 __PACKAGE__->add_columns(
+  "id",
+  {
+    data_type         => "bigint",
+    is_auto_increment => 1,
+    is_nullable       => 0,
+    sequence          => "analyzer_id_seq",
+  },
   "name",
   { data_type => "varchar", is_nullable => 1, size => 500 },
   "run",
@@ -81,8 +95,8 @@ __PACKAGE__->add_columns(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07035 @ 2014-01-31 17:18:33
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:be5dujVe/61InSw2Q/LLNg
+# Created by DBIx::Class::Schema::Loader v0.07035 @ 2014-02-25 17:44:15
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:P3pVDndVNvR5be9/EsJdXg
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

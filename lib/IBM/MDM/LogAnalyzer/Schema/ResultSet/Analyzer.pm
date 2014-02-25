@@ -24,15 +24,16 @@ sub parser {
         }
 
         if ( $line =~
-            m{\d+\s+(\w+)\s+:\s+\w+_CONTROLLER\s+@\s+CONTROLLER\s+:\s+:\s+(\d+)}
+m{\d+\s(\w+)\s+:\s+\w+_CONTROLLER\s+@\s+CONTROLLER\s+:\s+:\s+\d+\s+:\s+(\d+)\s+:\s+:\s+SUCCESS}
           )
         {
+            my ( $op, $delay ) = ( $1, $2 );
             $self->create(
                 {
                     name      => $params->{name},
                     run       => $params->{run},
-                    operation => $1,
-                    delay     => $2,
+                    operation => $op,
+                    delay     => $delay,
                     date      => $date,
                 }
             );

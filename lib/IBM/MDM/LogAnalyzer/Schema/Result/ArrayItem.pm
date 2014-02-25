@@ -48,8 +48,8 @@ __PACKAGE__->table("array_item");
 __PACKAGE__->add_columns("avg", { data_type => "double precision", is_nullable => 1 });
 
 
-# Created by DBIx::Class::Schema::Loader v0.07035 @ 2014-01-31 17:18:33
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:MdwD3kjodmS0+63+nWGAgA
+# Created by DBIx::Class::Schema::Loader v0.07035 @ 2014-02-25 17:44:15
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:t0M/IbOoyE+KUcGC+i9XKw
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
