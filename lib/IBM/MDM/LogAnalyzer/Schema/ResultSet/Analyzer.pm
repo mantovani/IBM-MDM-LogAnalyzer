@@ -6,12 +6,15 @@ use base 'DBIx::Class::ResultSet';
 
 use IO::Uncompress::Unzip qw/unzip/;
 use File::Temp qw/ tempfile /;
+use IO::Handle;
 
 sub parser {
     my ( $self, $upload, $params ) = @_;
     my ( $output, $filename ) = tempfile();
 
     unzip \$upload->slurp => $output or die $!;
+
+    $output->autoflush(0);
 
     my $date;
 
@@ -41,7 +44,6 @@ m{\d+\s(\w+)\s+:\s+\w+_CONTROLLER\s+@\s+CONTROLLER\s+:\s+:\s+\d+\s+:\s+(\d+)\s+:
     }
     close $output;
     unlink $filename;
-    return 1;
 }
 
 sub runs {

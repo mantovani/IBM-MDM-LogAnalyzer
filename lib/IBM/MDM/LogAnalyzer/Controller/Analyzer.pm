@@ -45,6 +45,13 @@ sub response : Chained('base') : PathPart('response') : Args(3) {
     $c->forward('View::JSON');
 }
 
+sub response_avg : Chained('base') : PathPart('response_avg') : Args(3) {
+    my ( $self, $c, $name, $run, $operation ) = @_;
+    $c->stash->{data} =
+      $c->stash->{db_analyticsavg}->json_analyzer( $name, $run, $operation );
+    $c->forward('View::JSON');
+}
+
 sub statics : Chained('base') : PathPart('statics') : Args(2) {
     my ( $self, $c, $name, $operation ) = @_;
     $c->stash->{test_name} = $name;
