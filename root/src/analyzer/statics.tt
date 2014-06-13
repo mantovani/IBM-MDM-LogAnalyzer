@@ -1,38 +1,84 @@
 <h2>Test: [% test_name %] </h1>
 
 <h3> Operation: [% operation %]</h2>
-      <canvas id="canvas" height="450" width="900"></canvas>
+
+	<div id="content">
+			<p id="choices" style="float:left; width:340px;"></p>
+			<div id="placeholder" class="demo-placeholder" style="float:left; width:950px; height:300px;"></div>
+	</div>
+
 <script>
 
+function populateData(dataAjaxIn) {
+	var dataFinal = [];
+	$.each(dataAjaxIn,function(key,value) {
+		dataFinal.push([key+1,value]);
+	});
+	return dataFinal;
+};
 
-[% FOREACH run IN db_analyzer.runs(test_name,operation) %]
+
+
+[% FOREACH run IN db_analyzer.runs(test_name,operation).reverse %]
 
 		var [% 'req' _ run %] = $.ajax({ url: "/analyzer/response/[% test_name %]/[% run %]/[% operation %]"});
 
 [% END %]
 
 	$.when([% db_analyzer.runs(test_name,operation).join(', ').replace('(\d+)','req$1') %]).done(function(){
-        var lineChartData = {
-        labels : ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25"],
-        datasets : [
-[% R = 255, G = 43, B = 0 %]
-[% FOREACH run IN db_analyzer.runs(test_name,operation) %]
-                {
-                    fillColor : "rgba([% R %],[% G %], [% B %],0.5)",
-                    strokeColor : "rgba([% R %],[% G %], [% B %],1)",
-                    pointColor : "rgba([% R %],[% G %], [% B %],1)",
-                    pointStrokeColor : "#fff",
-					data : jQuery.parseJSON([% 'req' _ run %].responseText).data,
+
+     var datasets = {
+[% FOREACH run IN db_analyzer.runs(test_name,operation).reverse %]
+				"[% 'run' _ run %]" :    {
 					label : '[% 'run' _ run %]',
-	                labelColor : 'white',
-                    labelFontSize : '16'
+					data : populateData(jQuery.parseJSON([% 'req' _ run %].responseText).data)
                 },
-
-[% R = R - 69, G = G, B = B + 29 %]
 [% END %]
-            ]
-        }
-    var myLine = new Chart(document.getElementById("canvas").getContext("2d")).Line(lineChartData);
-});
+        };
 
+		var i = 0;
+		$.each(datasets, function(key, val) {
+			val.color = i;
+			++i;
+		});
+
+		// insert checkboxes 
+		var choiceContainer = $("#choices");
+		$.each(datasets, function(key, val) {
+			choiceContainer.append("<br/><input type='checkbox' name='" + key +
+				"' checked='checked' id='id" + key + "'></input>" +
+				"<label for='id" + key + "'>"
+				+ val.label + "</label>");
+		});
+
+		choiceContainer.find("input").click(plotAccordingToChoices);
+
+		function plotAccordingToChoices() {
+
+			var data = [];
+
+			choiceContainer.find("input:checked").each(function () {
+				var key = $(this).attr("name");
+				if (key && datasets[key]) {
+					data.push(datasets[key]);
+				}
+			});
+
+			if (data.length > 0) {
+				$.plot("#placeholder", data, {
+					yaxis: {
+						min: 0
+					},
+					xaxis: {
+						tickDecimals: 0
+					}
+				});
+			}
+		}
+
+		plotAccordingToChoices();
+});
 </script>
+
+
+

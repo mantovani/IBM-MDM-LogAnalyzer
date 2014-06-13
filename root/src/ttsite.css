@@ -23,6 +23,8 @@ body {
     left: 0px;
     width: 100%;
     padding: 4px;
+	position: fixed;  
+	bottom: 0px;
 }
 
 #content {
