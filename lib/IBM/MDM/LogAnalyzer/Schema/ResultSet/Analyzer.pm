@@ -10,16 +10,13 @@ use IO::Handle;
 
 sub parser {
     my ( $self, $upload, $params ) = @_;
-    my ( $output, $filename ) = tempfile();
 
-    unzip \$upload->slurp => $output or die $!;
+    open my $fh, '<', $upload->tempname or die $!;
 
-    $output->autoflush(0);
-
+    my @data;
     my $date;
 
-    seek $output, 0, 0;
-    while ( my $line = <$output> ) {
+    while ( my $line = <$fh> ) {
         chomp $line;
         if ( $line =~ m{(\d{4}\-\d{2}\-\d{2}\s+\d+:\d+:\d+)} ) {
             $date = $1;
@@ -31,19 +28,28 @@ m{\d+\s(\w+)\s+:\s+\w+_CONTROLLER\s+@\s+CONTROLLER\s+:\s+:\s+\d+\s+:\s+(\d+)\s+:
           )
         {
             my ( $op, $delay ) = ( $1, $2 );
-            $self->create(
-                {
-                    name      => $params->{name},
-                    run       => $params->{run},
-                    operation => $op,
-                    delay     => $delay,
-                    date      => $date,
-                }
-            );
+            push @data, [ $params->{name}, $params->{run}, $op, $delay, $date ];
         }
+
     }
-    close $output;
-    unlink $filename;
+
+    my $tbname = $self->result_source->name;
+    $self->result_source->schema->storage->dbh_do(
+        sub {
+            my ( $storage, $dbh ) = @_;
+            $dbh->do(
+"COPY $tbname (name,run,operation,delay,date) FROM STDIN WITH CSV"
+            );
+            foreach my $item (@data) {
+                next if not ref $item;
+                my $put_data = join ',', @{$item};
+                $put_data .= "\n";
+                $dbh->pg_putcopydata($put_data) for @data;
+            }
+            $dbh->pg_putcopyend;
+        }
+    );
+
 }
 
 sub runs {
