@@ -24,6 +24,3 @@ $$ LANGUAGE plpgsql;
 DROP FUNCTION analytics_avg(client_name varchar, op_name varchar,run_id bigint)
 
 CREATE INDEX analyzer_search ON analyzer(name,operation,run);
-
-
-

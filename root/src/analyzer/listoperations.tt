@@ -3,7 +3,7 @@
 	<tr>
 		<td>Operations</td>
 	</tr>
-[% FOREACH operation IN db_analyzer.list_operations(test_name) %]
+[% FOREACH operation IN mdm_analyzer.list_operations(test_name) %]
 	<tr>
 		<td>
 			<a href="[% c.uri_for('/analyzer/statics',test_name,operation) %]">[% operation  %]</a>

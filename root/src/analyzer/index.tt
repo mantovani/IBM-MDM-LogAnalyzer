@@ -3,7 +3,9 @@
 	<tr>
 		<td>Tests</td>
 	</tr>
-[% FOREACH test_name IN db_analyzer.list_names %]
+
+<h1>aaaa[% mdm_analyzer %]aaaaaa</h1>
+[% FOREACH test_name IN mdm_analyzer.list_names %]
 	<tr>
 		<td>
 			<a href="[% c.uri_for('/analyzer/listoperations',test_name) %]">[% test_name %]</a>
