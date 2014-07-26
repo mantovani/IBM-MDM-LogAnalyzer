@@ -10,8 +10,7 @@ use constant RUN  => 10;
 use constant NAME => 'R57';
 use constant CONFIG =>
   '/home/hadoop/apps/IBM-MDM-LogAnalyzer/script/load/config';
-use constant ZERO      => 0;
-use constant DUMP_SIZE => 100000;
+use constant ZERO => 0;
 
 $| = 1;
 
@@ -40,14 +39,12 @@ m{\d+\s(\w+)\s+:\s+\w+_CONTROLLER\s+@\s+CONTROLLER\s+:\s+:\s+\d+\s+:\s+(\d+)\s+:
               )
             {
                 my ( $op, $delay ) = ( $1, $2 );
-                $buff->{$op}->{$date}->{$delay / 1000000} = 1;
+                $buff->{$op}->{$date}->{ $delay / 1000000 } = 1;
             }
         }
     }
-    if ( $timestamp > $last_insert ) {
-        write_persistent($higher_ts);
-        dump_buff($buff);
-    }
+    write_persistent($higher_ts);
+    dump_buff($buff);
 }
 
 sub dump_buff {
