@@ -7,6 +7,8 @@
 	</style>
 	<script src="/static/js/jquery-2.1.0.min.js"></script>
 	<script language="javascript" type="text/javascript" src="/static/js/jquery.flot.js"></script>
+	<script language="javascript" type="text/javascript" src="/static/js/highcharts.js"></script>
+	<script language="javascript" type="text/javascript" src="/static/js/exporting.js"></script>
 	<meta name = "viewport" content = "initial-scale = 1, user-scalable = no">
  </head>
  <body>

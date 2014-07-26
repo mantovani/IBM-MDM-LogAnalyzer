@@ -4,7 +4,6 @@
 		<td>Tests</td>
 	</tr>
 
-<h1>aaaa[% mdm_analyzer %]aaaaaa</h1>
 [% FOREACH test_name IN mdm_analyzer.list_names %]
 	<tr>
 		<td>

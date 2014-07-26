@@ -1,11 +1,7 @@
 <h2>Test: [% test_name %] </h1>
 
-<h3> Operation: [% operation %]</h2>
+<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
-	<div id="content">
-			<p id="choices" style="float:left; width:340px;"></p>
-			<div id="placeholder" class="demo-placeholder" style="float:left; width:950px; height:300px;"></div>
-	</div>
 
 <script>
 
@@ -18,66 +14,85 @@ function populateData(dataAjaxIn) {
 };
 
 
-
-[% FOREACH run IN db_analyzer.runs(test_name,operation).reverse %]
-
-		var [% 'req' _ run %] = $.ajax({ url: "/analyzer/response/[% test_name %]/[% run %]/[% operation %]"});
-
-[% END %]
-
-	$.when([% db_analyzer.runs(test_name,operation).join(', ').replace('(\d+)','req$1') %]).done(function(){
-
-     var datasets = {
-[% FOREACH run IN db_analyzer.runs(test_name,operation).reverse %]
-				"[% 'run' _ run %]" :    {
-					label : '[% 'run' _ run %]',
-					data : populateData(jQuery.parseJSON([% 'req' _ run %].responseText).data)
+$(function () {
+    $(document).ready(function() {
+        Highcharts.setOptions({
+            global: {
+                useUTC: false
+            }
+        });
+    
+        var chart;
+        $('#container').highcharts({
+            chart: {
+                type: 'spline',
+                animation: Highcharts.svg, // don't animate in old IE
+                marginRight: 10,
+                events: {
+                    load: function() {
+    
+                        // set up the updating of the chart each second
+                        var series = this.series[0];
+                        setInterval(function() {
+                            var x = (new Date()).getTime(), // current time
+                                y = Math.random();
+                            series.addPoint([x, y], true, true);
+                        }, 1000);
+                    }
+                }
+            },
+            title: {
+                text: '[% operation %]'
+            },
+            xAxis: {
+                type: 'datetime',
+                tickPixelInterval: 150
+            },
+            yAxis: {
+                title: {
+                    text: 'Value'
                 },
-[% END %]
-        };
-
-		var i = 0;
-		$.each(datasets, function(key, val) {
-			val.color = i;
-			++i;
-		});
-
-		// insert checkboxes 
-		var choiceContainer = $("#choices");
-		$.each(datasets, function(key, val) {
-			choiceContainer.append("<br/><input type='checkbox' name='" + key +
-				"' checked='checked' id='id" + key + "'></input>" +
-				"<label for='id" + key + "'>"
-				+ val.label + "</label>");
-		});
-
-		choiceContainer.find("input").click(plotAccordingToChoices);
-
-		function plotAccordingToChoices() {
-
-			var data = [];
-
-			choiceContainer.find("input:checked").each(function () {
-				var key = $(this).attr("name");
-				if (key && datasets[key]) {
-					data.push(datasets[key]);
-				}
-			});
-
-			if (data.length > 0) {
-				$.plot("#placeholder", data, {
-					yaxis: {
-						min: 0
-					},
-					xaxis: {
-						tickDecimals: 0
-					}
-				});
-			}
-		}
-
-		plotAccordingToChoices();
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+            tooltip: {
+                formatter: function() {
+                        return '<b>'+ this.series.name +'</b><br/>'+
+                        Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) +'<br/>'+
+                        Highcharts.numberFormat(this.y, 2);
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            exporting: {
+                enabled: false
+            },
+            series: [{
+                name: '[% operation %]',
+                data: (function() {
+                    // generate an array of random data
+                    var data = [],
+                        time = (new Date()).getTime(),
+                        i;
+    
+                    for (i = -59; i <= 0; i++) {
+                        data.push({
+                            x: time + i * 1000,
+                            y: Math.random() * 100
+                        });
+                    }
+                    return data;
+                })()
+            }]
+        });
+    });
+    
 });
+
 </script>
 
 
