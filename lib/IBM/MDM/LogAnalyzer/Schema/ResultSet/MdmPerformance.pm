@@ -45,8 +45,8 @@ sub list_operations {
 
 sub json_real_time {
     my ( $self, $name, $run, $operation, $timestamp ) = @_;
-    [
-        $self->search(
+    return [
+        map { [ $_->date->epoch, $_->get_column('avg_delay') ] } $self->search(
             [
                 name      => $name,
                 run       => $run,
@@ -66,7 +66,6 @@ sub json_real_time {
             }
         )->all
     ];
-    die;
 }
 
 1;

@@ -40,7 +40,7 @@ m{\d+\s(\w+)\s+:\s+\w+_CONTROLLER\s+@\s+CONTROLLER\s+:\s+:\s+\d+\s+:\s+(\d+)\s+:
               )
             {
                 my ( $op, $delay ) = ( $1, $2 );
-                $buff->{$op}->{$date}->{$delay} = 1;
+                $buff->{$op}->{$date}->{$delay / 1000000} = 1;
             }
         }
     }
