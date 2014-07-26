@@ -26,7 +26,7 @@ sub index : Chained('base') : PathPart('') : Args(0) {
 }
 
 sub response : Chained('base') : PathPart('response') : Args(4) {
-    my ( $self, $c, $name, $run, $operation, $timestamp ) = @_;
+    my ( $self, $c, $name, $operation, $run, $timestamp ) = @_;
     $c->stash->{data} =
       $c->stash->{mdm_analyzer}
       ->json_real_time( $name, $run, $operation, $timestamp );

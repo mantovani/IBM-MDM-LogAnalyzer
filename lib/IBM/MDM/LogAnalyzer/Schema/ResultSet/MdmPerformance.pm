@@ -45,17 +45,18 @@ sub list_operations {
 
 sub json_real_time {
     my ( $self, $name, $run, $operation, $timestamp ) = @_;
-    return [
-        map { [ $_->date->epoch, $_->get_column('avg_delay') ] } $self->search(
-            [
-                name      => $name,
-                run       => $run,
-                operation => $operation,
-                date      => \[
-                    '>= TIMESTAMP(\'1970-01-01\', \'00:00:00\') + ? SECONDS',
-                    [ plain_value => $timestamp ]
-                ]
-            ],
+    [
+        map { { x => $_->date->epoch, y => $_->get_column('avg_delay') } }
+          $self->search(
+            {
+                    name      => $name,
+                    run       => $run,
+                    operation => $operation,
+                    date      => \[
+'>= TIMESTAMP(\'1970-01-01\', \'00:00:00\') + ? SECONDS',
+                        [ plain_value => $timestamp ]
+                    ]
+            },
             {
                 select =>
                   [ 'name', 'run', 'operation', 'date', { avg => 'delay' } ],
@@ -64,7 +65,7 @@ sub json_real_time {
                 order_by => { -asc => 'date' },
 
             }
-        )->all
+          )->all
     ];
 }
 
