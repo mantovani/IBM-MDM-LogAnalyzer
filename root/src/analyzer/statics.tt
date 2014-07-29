@@ -5,14 +5,23 @@
 
 <script>
 
-function populateData(dataAjaxIn) {
-	var dataFinal = [];
-	$.each(dataAjaxIn,function(key,value) {
-		dataFinal.push([key+1,value]);
-	});
-	return dataFinal;
-};
 
+function initData(x) {
+	var timestamp = (new Date()).getTime();
+	var init = $.ajax({
+		//async: false,
+		url: "/analyzer/response/[% test_name %]/[% operation %]/10/" + Math.ceil((timestamp / 1000 - 10800) - 360),
+		dataType: "json",
+		cache: false,
+		success: function(abj) {
+			console.log(this.responseText);
+			x.setData(abj.data,true,false);
+			setTimeout(function() {
+				initData(x)
+			},1000);
+		}
+	});
+}
 
 $(function () {
     $(document).ready(function() {
@@ -30,14 +39,9 @@ $(function () {
                 marginRight: 10,
                 events: {
                     load: function() {
-    
-                        // set up the updating of the chart each second
                         var series = this.series[0];
-                        setInterval(function() {
-                            var x = (new Date()).getTime(), // current time
-                                y = Math.random();
-                            series.addPoint([x, y], true, true);
-                        }, 1000);
+   						// set up the updating of the chart each second
+						initData(series);
                     }
                 }
             },
@@ -74,19 +78,9 @@ $(function () {
             series: [{
                 name: '[% operation %]',
                 data: (function() {
-                    // generate an array of random data
-                    var data = [],
-                        time = (new Date()).getTime(),
-                        i;
-    
-                    for (i = -59; i <= 0; i++) {
-                        data.push({
-                            x: time + i * 1000,
-                            y: Math.random() * 100
-                        });
-                    }
-                    return data;
-                })()
+					return [];
+	            	return initData();
+               })()
             }]
         });
     });
