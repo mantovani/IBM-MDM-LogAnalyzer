@@ -18,7 +18,7 @@ function initData(x) {
 			x.setData(abj.data,true,false);
 			setTimeout(function() {
 				initData(x)
-			},1000);
+			},2000);
 		}
 	});
 }
