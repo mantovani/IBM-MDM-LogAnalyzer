@@ -1,0 +1,71 @@
+<h2>Test: [% test_name %] </h1>
+
+<p>
+	<font size="3">Real time statistics</font>
+[% FOREACH run IN mdm_analyzer.list_runs(test_name,operation) %]
+            <a href="[% c.uri_for('/analyzer/online_statistics',test_name,operation,run) %]">[% run %]</a>
+[% END %]
+</p>
+
+<div id="container" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"><h1>foo</h1></div>
+<script>
+
+
+function tps_avg(series) {
+	$.ajax({
+		async: true,
+		url: "/analyzer/json_statistics/[% test_name %]/[% operation %]/",
+		dataType: "json",
+		success : function(obj){
+			series.setData(obj.data)
+		}
+	}) 
+}
+
+
+$(function () {
+    $('#container').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+			events: {
+            	load: function() {
+            		var series = this.series[0];
+            		tps_avg(series);
+                }
+            }
+        },
+        title: {
+            text: '[% operation %] TPS'
+        },
+        tooltip: {
+    	    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: false,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f}',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'TPS',
+            data: (function(){
+			})()
+        }]
+    });
+});
+    
+
+</script>
+
+
+
