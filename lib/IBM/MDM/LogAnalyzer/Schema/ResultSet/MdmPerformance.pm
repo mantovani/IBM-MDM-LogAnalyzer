@@ -43,6 +43,22 @@ sub list_operations {
     ];
 }
 
+sub list_runs {
+    my ( $self, $name, $operation ) = @_;
+    [
+        map { $_->run } $self->search(
+            {
+                name      => $name,
+                operation => $operation
+            },
+            {
+                columns  => [qw/run/],
+                group_by => [qw/name operation run/],
+            }
+        )->all
+    ];
+}
+
 sub json_real_time {
     my ( $self, $name, $run, $operation, $timestamp ) = @_;
     [
@@ -59,7 +75,7 @@ sub json_real_time {
                 date      => \[
 'BETWEEN TIMESTAMP(\'1970-01-01\', \'00:00:00\') + ? SECONDS AND TIMESTAMP(\'1970-01-01\', \'00:00:00\') + ? SECONDS',
                     [ plain_value => $timestamp ],
-                    [ plain_value => $timestamp + 60]
+                    [ plain_value => $timestamp + 60 ]
                 ]
             },
             {
@@ -74,4 +90,25 @@ sub json_real_time {
     ];
 }
 
+sub json_tps_avg {
+    my ( $self, $name, $operation ) = @_;
+    [
+        map {
+            [
+                $_->get_column('name') . ':' . $_->get_column('run'),
+                int( $_->get_column('average') )
+            ]
+          } $self->search(
+            {
+                name      => $name,
+                operation => $operation
+            },
+            {
+                select => [ 'name', { avg => 'delay' }, 'run' ],
+                as       => [ 'name', 'average', 'run' ],
+                group_by => [qw/name operation run/],
+            }
+          )->all
+    ];
+}
 1;

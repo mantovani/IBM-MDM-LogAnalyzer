@@ -25,23 +25,38 @@ sub index : Chained('base') : PathPart('') : Args(0) {
     my ( $self, $c ) = @_;
 }
 
-sub response : Chained('base') : PathPart('response') : Args(4) {
-    my ( $self, $c, $name, $operation, $run, $timestamp ) = @_;
-    $c->stash->{data} =
-      $c->stash->{mdm_analyzer}
-      ->json_real_time( $name, $run, $operation, $timestamp );
-    $c->forward('View::JSON');
+sub listoperations : Chained('base') : PathPart('listoperations') : Args(1) {
+    my ( $self, $c, $name ) = @_;
+    $c->stash->{test_name} = $name;
 }
 
-sub statics : Chained('base') : PathPart('statics') : Args(2) {
+sub statistics : Chained('base') : PathPart('statistics') : Args(2) {
     my ( $self, $c, $name, $operation ) = @_;
     $c->stash->{test_name} = $name;
     $c->stash->{operation} = $operation;
 }
 
-sub listoperations : Chained('base') : PathPart('listoperations') : Args(1) {
-    my ( $self, $c, $name ) = @_;
+sub json_statiscs : Chained('base') : PathPart('json_statistics') : Args(2) {
+    my ( $self, $c, $name, $operation ) = @_;
+    $c->stash->{data} =
+      $c->stash->{mdm_analyzer}->json_tps_avg( $name, $operation );
+    $c->forward('View::JSON');
+}
+
+sub online_statistics : Chained('base') : PathPart('online_statistics') : Args(3) {
+    my ( $self, $c, $name, $operation, $run ) = @_;
     $c->stash->{test_name} = $name;
+    $c->stash->{operation} = $operation;
+    $c->stash->{run}       = $run;
+}
+
+sub json_online_statistics : Chained('base') :
+  PathPart('json_online_statistics') : Args(4) {
+    my ( $self, $c, $name, $operation, $run, $timestamp ) = @_;
+    $c->stash->{data} =
+      $c->stash->{mdm_analyzer}
+      ->json_real_time( $name, $run, $operation, $timestamp );
+    $c->forward('View::JSON');
 }
 
 =head1 AUTHOR

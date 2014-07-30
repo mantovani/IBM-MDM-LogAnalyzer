@@ -6,7 +6,7 @@ use warnings;
 use DateTime;
 use DateTime::Format::Strptime;
 
-use constant RUN  => 10;
+use constant RUN  => 14;
 use constant NAME => 'R57';
 use constant CONFIG =>
   '/home/hadoop/apps/IBM-MDM-LogAnalyzer/script/load/config';
