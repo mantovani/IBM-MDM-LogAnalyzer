@@ -8,6 +8,28 @@
 </p>
 
 <div id="container" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"><h1>foo</h1></div>
+[% runs = mdm_analyzer.report_transaction(test_name,operation) %]
+
+[% FOREACH run IN runs.keys %]
+<h3>[% run %]</h3>
+	<table border="0">
+		<tr>
+			<td><b>Total</b></td>
+			<td><b>Requests</b></td>
+			<td><b>Percent</b></td>
+			<td><b>Delay</b></td>
+		</tr>
+	[% FOREACH report IN runs.$run %]
+		<tr>
+			<td>[% report.total %]</td>
+			<td>[% report.count %]</td>
+			<td>[% report.percent %]</td>
+			<td>[% report.between.0 %] ~ [% report.between.1 %] Millisecond</td>
+		</tr>
+	[% END %]
+	</table>
+[% END %]
+
 <script>
 
 
