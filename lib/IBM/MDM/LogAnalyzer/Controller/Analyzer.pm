@@ -39,7 +39,7 @@ sub statistics : Chained('base') : PathPart('statistics') : Args(2) {
 sub json_statiscs : Chained('base') : PathPart('json_statistics') : Args(2) {
     my ( $self, $c, $name, $operation ) = @_;
     $c->stash->{data} =
-      $c->stash->{mdm_analyzer}->json_tps_avg( $name, $operation );
+      $c->stash->{mdm_analyzer}->json_transaction_avg( $name, $operation );
     $c->forward('View::JSON');
 }
 

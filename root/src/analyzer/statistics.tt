@@ -11,7 +11,7 @@
 <script>
 
 
-function tps_avg(series) {
+function transaction_avg(series) {
 	$.ajax({
 		async: true,
 		url: "/analyzer/json_statistics/[% test_name %]/[% operation %]/",
@@ -32,12 +32,12 @@ $(function () {
 			events: {
             	load: function() {
             		var series = this.series[0];
-            		tps_avg(series);
+            		transaction_avg(series);
                 }
             }
         },
         title: {
-            text: '[% operation %] TPS'
+            text: '[% operation %] Average Response'
         },
         tooltip: {
     	    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -57,7 +57,7 @@ $(function () {
         },
         series: [{
             type: 'pie',
-            name: 'TPS',
+            name: 'Transaction Average Response',
             data: (function(){
 			})()
         }]

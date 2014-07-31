@@ -1,0 +1,64 @@
+echo "export PERL_MM_USE_DEFAULT=1" >> ~/.profile
+sudo cpan local::lib
+perl -Mlocal::lib >> ~/.profile 
+. ~/.profile
+
+export PERL_MM_USE_DEFAULT=1
+
+chown -R `whoami` ~/.cpan
+cpan CPAN
+
+cpan YAML 
+
+- DB2
+http://www-01.ibm.com/support/docview.wss?uid=swg21297335
+
+
+fix pack: DSClients-linuxx64-dsdriver-10.1.0.3-FP003
+http://read.pudn.com/downloads154/sourcecode/unix_linux/678540/SQLAPI/include/db2_linux/sqlcli.h__.htm
+
+http://www-01.ibm.com/support/docview.wss?uid=swg21297335
+export DB2LIB=/home/db2inst1/sqllib/lib64
+export DB2_HOME=/home/db2inst1
+
+. /home/db2inst1/mdm11.3/dsdriver/db2profile
+. /home/db2inst1/.bash_profile
+
+cpan DBI
+cpan DBD::DB2
+
+db2 create database MDM_APP
+db2 connect to MDM_APP user db2inst1 using db2inst1
+db2 -tvf data/db/create_table.sql
+
+alter db2 user password in script/load/sql/load.sql
+
+IBM-MDM-LogAnalyzer-master/lib/IBM/MDM/LogAnalyzer/Model/DB.pm:        user           => 'db2inst',
+IBM-MDM-LogAnalyzer-master/script/load/sql/load.sql~:connect to mdm_app user db2inst using admin;
+IBM-MDM-LogAnalyzer-master/script/load/sql/load.sql:connect to mdm_app user db2inst using db2inst;
+
+        user           => 'db2inst1',
+        password       => 'db2inst1',
+        db2_set_schema => 'DB2INST1',
+ 
+
+##################
+btw after installing db2 client stuff and running the new db2profile comand it still didnt work (cpan DBD::DB2) 
+11:08:28 PM: iandallas@uk.ibm.com - Ian Dallas/UK/IBM: so i had to copy the *.h files from the include folder created by DSDriver:  
+11:08:29 PM: iandallas@uk.ibm.com - Ian Dallas/UK/IBM: sqlca.h    sqlcli.h  sqlenv.h  sql.h       sqlsystm.h
+sqlcli1.h  sqlda.h   sqlext.h  sqlstate.h
+ 
+into db2 include folder /opt/ibm/db2/V10.1/include 
+then cpan DBD::DB2 worked 
+##################
+
+- Install Dependencies
+perl Makefile.PL
+
+
+
+- Run the web server
+perl script/ibm_mdm_loganalyzer_server.pl
+
+
+Run script/ibm_mdm_loganalyzer_server.pl to test the application.

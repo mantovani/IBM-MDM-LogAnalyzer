@@ -64,7 +64,7 @@ sub json_real_time {
     [
         map {
             {
-                x => int( ( $_->date->epoch + 10800  ) * 1000 ),
+                x => int( ( $_->date->epoch + 10800 ) * 1000 ),
                 y => int( $_->get_column('avg_delay') )
             }
           } $self->search(
@@ -90,7 +90,7 @@ sub json_real_time {
     ];
 }
 
-sub json_tps_avg {
+sub json_transaction_avg {
     my ( $self, $name, $operation ) = @_;
     [
         map {
