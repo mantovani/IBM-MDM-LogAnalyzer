@@ -43,3 +43,11 @@ h1.title {
 .error {
     color: [% site.col.error %];
 }
+
+table {
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid black;
+}

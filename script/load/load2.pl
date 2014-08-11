@@ -6,7 +6,7 @@ use warnings;
 use DateTime;
 use DateTime::Format::Strptime;
 
-use constant RUN  => 90;
+use constant RUN  => 283;
 use constant NAME => 'R57';
 use constant CONFIG =>
   '/home/hadoop/apps/IBM-MDM-LogAnalyzer/script/load/config';
@@ -24,7 +24,6 @@ $| = 1;
 
     my $last_insert = start();
 
-    my $delay;
     while ( my $line = <STDIN> ) {
         $count++;
         chomp $line;
@@ -37,19 +36,10 @@ $| = 1;
 
         if ( $timestamp > $last_insert ) {
             if ( $line =~
-m{\d+\sprocessTx\s+:\s+processTx\([\w,]+\)\s+@\s+DWLRequestHandler\s+:\s+:\s+\d+\s+:\s+(\d+)\s+:\s+:\s+SUCCESS}
+m{\d+\s+\w+\s+:\s+(\w+)_\w+\s+@\s+\w+\s+:\s+\d+\s+:\s+\d+\s+:\s+(\d+)\s+:\s+:\s+SUCCESS}
               )
             {
-				
-                $delay = $1;
-                next;
-            }
-
-            if ( $line =~
-m{\d+\s+(\w+)\s+:\s+\w+\s+@\s+ITxRx\s+:\s+\d+\s+:\s+\d+\s+:\s+\d+\s+:\s+:\s+SUCCESS}
-              )
-            {
-                my $op = $1;
+                my ( $op, $delay ) = ( $1, $2 );
                 $buff->{$op}->{$date}->{ $delay / 1000000 } = 1;
             }
         }

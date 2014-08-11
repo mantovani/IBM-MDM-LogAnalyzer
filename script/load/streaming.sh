@@ -1,7 +1,8 @@
 #!/bin/bash
 
 
-LOCAL_MDM_DIR_LOGS=/opt/IBM/WebSphere/AppServer/profiles/AppSrv01/
+#LOCAL_MDM_DIR_LOGS=/opt/IBM/WebSphere/AppServer/profiles/AppSrv01/
+LOCAL_MDM_DIR_LOGS=/home/hadoop/tmp
 REMOTE_SCRIPT_EXEC=/home/hadoop/apps/IBM-MDM-LogAnalyzer/script/load
 
 RUN=$1

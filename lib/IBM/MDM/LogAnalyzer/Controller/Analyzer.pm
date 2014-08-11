@@ -30,10 +30,15 @@ sub listoperations : Chained('base') : PathPart('listoperations') : Args(1) {
     $c->stash->{test_name} = $name;
 }
 
-sub statistics : Chained('base') : PathPart('statistics') : Args(2) {
-    my ( $self, $c, $name, $operation ) = @_;
+sub listruns : Chained('base') : PathPart('listruns') : Args(1) {
+    my ( $self, $c, $name ) = @_;
     $c->stash->{test_name} = $name;
-    $c->stash->{operation} = $operation;
+}
+
+sub statistics : Chained('base') : PathPart('statistics') : Args(2) {
+    my ( $self, $c, $name, $run ) = @_;
+    $c->stash->{test_name} = $name;
+    $c->stash->{run} = $run;
 }
 
 sub json_statiscs : Chained('base') : PathPart('json_statistics') : Args(2) {
@@ -43,7 +48,8 @@ sub json_statiscs : Chained('base') : PathPart('json_statistics') : Args(2) {
     $c->forward('View::JSON');
 }
 
-sub online_statistics : Chained('base') : PathPart('online_statistics') : Args(3) {
+sub online_statistics : Chained('base') : PathPart('online_statistics') :
+  Args(3) {
     my ( $self, $c, $name, $operation, $run ) = @_;
     $c->stash->{test_name} = $name;
     $c->stash->{operation} = $operation;

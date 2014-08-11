@@ -14,6 +14,6 @@ export PERL_MB_OPT;
 PERL_MM_OPT="INSTALL_BASE=/home/hadoop/perl5";
 export PERL_MM_OPT;
 
-perl ${HOME_PATH}/load.pl > ${HOME_PATH}/data/bulk_load.csv
+perl ${HOME_PATH}/load2.pl > ${HOME_PATH}/data/bulk_load.csv
 wc -l ${HOME_PATH}/data/bulk_load.csv
 db2 -tvf ${HOME_PATH}/sql/load.sql

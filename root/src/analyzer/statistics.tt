@@ -1,93 +1,21 @@
-<h2>Test: [% test_name %] </h1>
+<h2>Name: [% test_name %] Run: [% run %] </h1>
 
-<p>
-	<font size="3">Real time statistics</font>
-[% FOREACH run IN mdm_analyzer.list_runs(test_name,operation) %]
-            <a href="[% c.uri_for('/analyzer/online_statistics',test_name,operation,run) %]">[% run %]</a>
-[% END %]
-</p>
-
-<div id="container" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"><h1>foo</h1></div>
-[% runs = mdm_analyzer.report_transaction(test_name,operation) %]
-
-[% FOREACH run IN runs.keys %]
-<h3>[% run %]</h3>
-	<table border="0">
-		<tr>
-			<td><b>Total</b></td>
-			<td><b>Requests</b></td>
-			<td><b>Percent</b></td>
-			<td><b>Delay</b></td>
-		</tr>
-	[% FOREACH report IN runs.$run %]
-		<tr>
-			<td>[% report.total %]</td>
-			<td>[% report.count %]</td>
-			<td>[% report.percent %]</td>
-			<td>[% report.between.0 %] ~ [% report.between.1 %] Millisecond</td>
-		</tr>
-	[% END %]
-	</table>
-[% END %]
-
-<script>
-
-
-function transaction_avg(series) {
-	$.ajax({
-		async: true,
-		url: "/analyzer/json_statistics/[% test_name %]/[% operation %]/",
-		dataType: "json",
-		success : function(obj){
-			series.setData(obj.data)
-		}
-	}) 
-}
-
-
-$(function () {
-    $('#container').highcharts({
-        chart: {
-            plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false,
-			events: {
-            	load: function() {
-            		var series = this.series[0];
-            		transaction_avg(series);
-                }
-            }
-        },
-        title: {
-            text: '[% operation %] Average Response'
-        },
-        tooltip: {
-    	    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-        },
-        plotOptions: {
-            pie: {
-                allowPointSelect: false,
-                cursor: 'pointer',
-                dataLabels: {
-                    enabled: true,
-                    format: '<b>{point.name}</b>: {point.percentage:.1f}',
-                    style: {
-                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-                    }
-                }
-            }
-        },
-        series: [{
-            type: 'pie',
-            name: 'Transaction Average Response',
-            data: (function(){
-			})()
-        }]
-    });
-});
-    
-
-</script>
-
-
-
+<table>
+	<tr>
+		<td><b>Transactions</b></td>
+		[% FOREACH range IN mdm_analyzer.list_range %]
+		<td>[% range %] ~</td>
+		[% END %]
+		<td>inf</td>
+	</tr>
+		[% report = mdm_analyzer.report_transaction(test_name,run) %]
+		[% FOREACH operation IN report.keys.sort %]
+			<tr>
+				<td>[% operation %]</td>
+			[% FOREACH statistic IN report.$operation %]
+				<td>[% statistic.total %](%[% statistic.percent %])</td>	
+			[% END %]
+			</tr>	
+		[% END %]
+</table>
+</br>

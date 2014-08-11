@@ -7,7 +7,7 @@
 [% FOREACH test_name IN mdm_analyzer.list_names %]
 	<tr>
 		<td>
-			<a href="[% c.uri_for('/analyzer/listoperations',test_name) %]">[% test_name %]</a>
+			<a href="[% c.uri_for('/analyzer/listruns',test_name) %]">[% test_name %]</a>
 		</td>
 	</tr>
 [% END %]
