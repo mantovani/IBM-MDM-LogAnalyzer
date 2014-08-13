@@ -1,9 +1,15 @@
 #!/bin/bash
 
 
-#LOCAL_MDM_DIR_LOGS=/opt/IBM/WebSphere/AppServer/profiles/AppSrv01/
+# - Folder with your performance logs
 LOCAL_MDM_DIR_LOGS=/home/hadoop/tmp
-REMOTE_SCRIPT_EXEC=/home/hadoop/apps/IBM-MDM-LogAnalyzer/script/load
+
+# - Folder where is your instalation
+REMOTE_SCRIPT_EXEC=/home/hadoop/apps/IBM-MDM-LogAnalyzer
+
+# -Username and IP address
+USERNAME=hadoop
+IPADDRESS=192.168.150.134
 
 RUN=$1
 
@@ -16,6 +22,6 @@ while [ 1 ] ; do
     TIME=`date +%s`
     echo $TIME
     cd ${LOCAL_MDM_DIR_LOGS}
-    find logs/ -name perfor* -exec cat {} \;|gzip| ssh hadoop@192.168.150.134 "gunzip -c |${REMOTE_SCRIPT_EXEC}/script.sh ${RUN}"
+    find logs/ -name perfor* -exec cat {} \;|gzip| ssh ${USERNAME}@${IPADDRESS} "gunzip -c |${REMOTE_SCRIPT_EXEC}/script/load/script.sh ${RUN}"
     sleep 5;
 done

@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use base 'DBIx::Class::ResultSet';
 
-use constant BLOCK => 100;
+use constant BLOCK => 20;
 
 use Data::Dumper;
 

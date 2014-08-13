@@ -8,8 +8,8 @@ use DateTime::Format::Strptime;
 
 use constant RUN  => 90;
 use constant NAME => 'R57';
-use constant CONFIG =>
-  '/home/hadoop/apps/IBM-MDM-LogAnalyzer/script/load/config';
+use constant LAST_INSERT =>
+  '/home/hadoop/apps/IBM-MDM-LogAnalyzer/script/load/last_insert';
 use constant ZERO => 0;
 
 $| = 1;
@@ -62,19 +62,19 @@ sub dump_buff {
 
 sub write_persistent {
     my $timestamp = shift;
-    open my $fh, '>', CONFIG or die $!;
+    open my $fh, '>', LAST_INSERT or die $!;
     print $fh $timestamp;
     close $fh;
     return 1;
 }
 
 sub start {
-    if ( !-e CONFIG ) {
-        open my $fh, '>', CONFIG or die $!;
+    if ( !-e LAST_INSERT ) {
+        open my $fh, '>', LAST_INSERT or die $!;
         print $fh ZERO;
         close $fh;
     }
-    open my $fh, '<', CONFIG or die $!;
+    open my $fh, '<', LAST_INSERT or die $!;
     my $config = <$fh>;
     close $fh;
     if ( $config =~ m{(\d+)} ) {

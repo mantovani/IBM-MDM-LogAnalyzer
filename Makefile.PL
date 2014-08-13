@@ -27,6 +27,7 @@ requires 'Data::Dumper';
 requires 'MooseX::MarkAsMethods';
 requires 'Moose';
 requires 'DBD::DB2';
+requires 'DateTime::Format::Strptime';
 requires 'namespace::autoclean';
 requires
   'Config::General';  # This should reflect the config file format you've chosen
