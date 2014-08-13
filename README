@@ -65,3 +65,8 @@ are generated like "/opt/IBM/WebSphere/Profile/.../AppSrv01/logs" and the the va
 as HOME_PATH. Now you also need change your USERNAME and IPADDRESS.
 
 Edit the file "IBM-MDM-LogAnalyzer-master/lib/IBM/MDM/LogAnalyzer/Model/DB.pm" and put your database informations.
+
+BULK LOAD
+
+Don't forget to configure the IBM-MDM-LogAnalyzer/script/load/sql/load.pl, you need set up your user name password and
+your "IBM-MDM-LogAnalyzer/script/load/sql" folder.
