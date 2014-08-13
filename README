@@ -4,12 +4,17 @@ process the log and also run the web server. It is good for avoid unnecessary CP
 Because you can see in real time the transactions. And sometimes, the MDM generate soo much
 performance.log that you won't have space to keep all log in the file system. In a bank
 the MDM log throughput was about 5GB/minute. So every minute the performance.log[1-10]
-rotated and in the end of the day. We just had one minute performance.log.
+rotated and in the end of the day. We just had one minute performance.log[1-10].
 
 [MDM Server] --streaming--> [Application Server]
 
 You can also run both in the same machine, there is no problem about this. What usually happen is
 that you get the performance.log from the costumer and analyze it offline into your on machine.
+
+You will have amazing graphics to help you, this tool is 100% open source. So you can add features
+easy, and share with the team.
+
+CONFIGURATION
 
 PUBLIC KEY TRUST LOGIN
 

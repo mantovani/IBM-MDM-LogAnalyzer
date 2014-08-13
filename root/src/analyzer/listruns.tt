@@ -1,0 +1,14 @@
+<h1>List Runs: [% test_name %]</h1>
+<table>
+	<tr>
+		<td>Runs</td>
+	</tr>
+[% FOREACH run IN mdm_analyzer.list_runs(test_name) %]
+	<tr>
+		<td>
+			<a href="[% c.uri_for('/analyzer/statistics',test_name,run) %]">[% run %]</a>
+		</td>
+	</tr>
+[% END %]
+	</tr>
+</table>
