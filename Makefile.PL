@@ -23,7 +23,10 @@ requires 'JSON::Syck';
 requires 'Catalyst::View::JSON';
 requires 'MooseX::NonMoose';
 requires 'Catalyst::Action::RenderView';
+requires 'Data::Dumper';
+requires 'MooseX::MarkAsMethods';
 requires 'Moose';
+requires 'DBD::DB2';
 requires 'namespace::autoclean';
 requires
   'Config::General';  # This should reflect the config file format you've chosen
