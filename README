@@ -1,77 +1,80 @@
-This application was designed for a wide propose. You can run a script into MDM server 
-machine and it will stream the performance.log into another machine and this machine will
-process the log and also run the web server. It is good for avoid unnecessary CPU overhead.
-Because you can see in real time the transactions. And sometimes, the MDM generate soo much
-performance.log that you won't have space to keep all log in the file system. In a bank
-the MDM log throughput was about 5GB/minute. So every minute the performance.log[1-10]
-rotated and in the end of the day. We just had one minute performance.log[1-10].
+IBM MDM Log Analyzer
+--------------------
 
-[MDM Server] --streaming--> [Application Server]
+This application was designed for a wide purpose. You can run a script into
+the MDM server box and it will stream the `performance.log` to another
+box, so it can process it and run the web server.
 
-You can also run both in the same machine, there is no problem about this. What usually happen is
-that you get the performance.log from the costumer and analyze it offline into your on machine.
+It is good to avoid unnecessary CPU overhead, since you can see the
+transactions in real time.
 
-You will have amazing graphics to help you, this tool is 100% open source. So you can add features
-easy, and share with the team.
+Sometimes, the MDM generates a `performance.log` that's so big you won't
+have enough space to keep all the logs in the file system. In a particular
+client, the MDM log throughput was about 5GB/minute, so every minute the
+`performance.log[1-10]` files rotated and in the end of the day we just
+had one minute wide `performance.log[1-10]`.
 
-CONFIGURATION
+#### Usage: ####
 
-PUBLIC KEY TRUST LOGIN
+    [MDM Server] --streaming--> [Application Server]
 
-Whatever how do you will use this, first you need automatic login using public key.
+You can also run both on the same machine. What usually happens though is
+you get the `performance.log` from the costumer and analyze it offline
+in your own box.
 
-If you will run the collect log script into [MDM Server] run the follow commands into [MDM Server].
-If you will run everything in same machie run the follow commands into this machine.
+You will have amazing graphics to help you, and this tool is 100% open
+source, so you can add features easily and share them with your team.
 
-$ssh-keygen # press enter in all fields
-Generating public/private rsa key pair.
-Enter file in which to save the key (/home/hadoop/.ssh/id_rsa): 
-Enter passphrase (empty for no passphrase): 
-Enter same passphrase again: 
-Your identification has been saved in /home/hadoop/.ssh/id_rsa.
-Your public key has been saved in /home/hadoop/.ssh/id_rsa.pub.
-The key fingerprint is:
-55:73:43:90:ab:c9:4e:6e:a1:03:ff:cf:b9:a6:fd:77 hadoop@hadoop-virtual-machine
-The key's randomart image is:
-+--[ RSA 2048]----+
-|            +++  |
-|           ..o . |
-|          .  .   |
-|         .  .    |
-|        S. o     |
-|      .   *      |
-|       o = .     |
-|        + +o..  E|
-|         +o+*o...|
-+-----------------+
+#### Configuration: ####
 
-Now we will create public key relationship. Get the "~/.ssh/id_rsa.pub" from the machine that you will run
-the collector script. Copy this and paste into [Application Server] "~/.ssh/authorized_keys"
+##### PUBLIC KEY TRUST LOGIN #####
 
-If you are running everything in the same machine, you can do:
-$cat ~/.ssh/id_rsa.pub > ~/.ssh/authorized_keys
+Whichever way you plan on using this, first you'll need to be able to do
+automatic logins using a public key.
 
-Now you can test:
+If you'll run the collector script on the [MDM Server], run the following
+commands on it. If, however, you'll run everything on the same box, run
+the following commands on said box:
 
-$ssh youruser@appmachine
+     $ ssh-keygen # press enter in all fields
 
-If don't ask password, is working.
+Now we'll create the public key relationship. Get the `~/.ssh/id_rsa.pub`
+file from the machine where you will run the collector script from. Copy
+this and paste onto the [Application Server]'s `~/.ssh/authorized_keys`.
 
-CONFIGURATION
+If you are running everything on the same machine, you can simply do:
 
-Go to "IBM-MDM-LogAnalyzer/script/load"
+    $ cat ~/.ssh/id_rsa.pub > ~/.ssh/authorized_keys
 
-Open the file "script.sh" you need edit two variables HOME_PATH which is the directory of your folder
-like "/home/hadoop/apps/IBM-MDM-LogAnalyzer" and DB2_HOME which is where your "sqllib" is.
-This script is responsible to parse the performance.log and insert it into DB2.
+Now you can test it:
 
-open the file "streaming.sh" you need edit the variable LOCAL_MDM_DIR_LOGS which will be the place where the performance.log
-are generated like "/opt/IBM/WebSphere/Profile/.../AppSrv01/logs" and the the variable REMOTE_SCRIPT_EXEC which will be the same
-as HOME_PATH. Now you also need change your USERNAME and IPADDRESS.
+    $ ssh youruser@appmachine
 
-Edit the file "IBM-MDM-LogAnalyzer-master/lib/IBM/MDM/LogAnalyzer/Model/DB.pm" and put your database informations.
+If it doesn't ask for a password, it's working :)
 
-BULK LOAD
+##### Step 2 #####
 
-Don't forget to configure the IBM-MDM-LogAnalyzer/script/load/sql/load.pl, you need set up your user name password and
-your "IBM-MDM-LogAnalyzer/script/load/sql" folder.
+Go to "`IBM-MDM-LogAnalyzer/script/load`".
+
+Open the file "`script.sh`". You'll need to edit two evariables:
+`HOME_PATH` which is the directory in your machine like
+"`/home/hadoop/apps/IBM-MDM-LogAnalyzer`" and `DB2_HOME` which is where
+your "`sqllib`" is. This script is responsible for parsing the
+`performance.log` file and insert it into DB2.
+
+Now open the "`streaming.sh`" file. You'll need to edit the variable
+`LOCAL_MDM_DIR_LOGS` which will be the place where the `performance.log`
+files are generated, like "`/opt/IBM/WebSphere/Profile/.../AppSrv01/logs`"
+and the variable `REMOTE_SCRIPT_EXEC` which will be the same
+as `HOME_PATH`. You'll also need to change your `USERNAME` and `IPADDRESS`
+on that file.
+
+Next, edit the
+"`IBM-MDM-LogAnalyzer-master/lib/IBM/MDM/LogAnalyzer/Model/DB.pm`" file
+and put your database informations in it.
+
+#### BULK LOAD ####
+
+Don't forget to configure the `IBM-MDM-LogAnalyzer/script/load/sql/load.pl`
+file. You'll need to set up your user name, password and your
+"`IBM-MDM-LogAnalyzer/script/load/sql`" directory.
